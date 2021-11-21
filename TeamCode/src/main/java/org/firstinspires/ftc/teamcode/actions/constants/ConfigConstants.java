@@ -16,15 +16,18 @@ public class ConfigConstants {
     public static final String SERVO_RIGHT = "right_hook";
 
     //slide
-    public static final String FLIPPER_SERVO = "flipper_servo" +
-            "";
+    public static final String SLIDE_MOTOR = "slideMotor";
+    public static final String SLIDE_SERVO = "slideServo";
 
     //Elbow
+    public static final String ELBOW_SERVO = "elbow_servo";
 
     //Gripper
-    public static final String ELBOW_SERVO = "elbow_servo";
     public static final String GRIPPER_SERVO = "gripper";
 
     //Carousel Spinner
     public static final String CAROUSEL_SPINNER = "carouselSpinner";
+
+    //Sensors
+    public static final String ELEMENT_DETECTOR ="elementDetector";
 }

@@ -22,44 +22,21 @@ public class MainTeleOp extends LinearOpMode {
         //Set Speed for teleOp. Mecannum wheel speed.
         //driveActions.setSpeed(1.0);
 
+        double carouselPower = 0.4;
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         driveActions.setSpeed(0.75);
 
         while (opModeIsActive()) {
+            //TODO: add functionality for red side carousel
 
             /** Gamepad 1 **/
             driveActions.drive(
                     gamepad1.left_stick_x,      //joystick controlling strafe
                     -gamepad1.left_stick_y,     //joystick controlling forward/backward
                     gamepad1.right_stick_x);    //joystick controlling rotation
-
-            if (gamepad1.a){
-                attachmentActions.spinCarousel();
-            } else{
-                attachmentActions.stopCarousel();
-            }
-            if (gamepad1.b){
-                attachmentActions.expandElbow();
-            }
-            if (gamepad1.a){
-                attachmentActions.contractElbow();
-            }
-            if (gamepad1.x){
-                attachmentActions.closeGripper();
-            }
-            if (gamepad1.y){
-                attachmentActions.openGripper();
-            }
-            if (gamepad2.a){
-                attachmentActions.spinCarousel();
-            } else{
-                attachmentActions.stopCarousel();
-            }
-            if (gamepad2.b){
-                attachmentActions.expandElbow();
-            }
             if (gamepad2.a){
                 attachmentActions.contractElbow();
             }
@@ -69,15 +46,35 @@ public class MainTeleOp extends LinearOpMode {
             if (gamepad2.y){
                 attachmentActions.openGripper();
             }
+            if (gamepad2.dpad_right){
+                attachmentActions.spinCarousel(-0.4);
+            } else if (gamepad2.dpad_left){
+                attachmentActions.spinCarousel(0.4);
+            } else{
+                attachmentActions.spinCarousel(0.0);
+                if (gamepad2.b){
+                    attachmentActions.expandElbow();
+                }
+            }
+            if (gamepad2.dpad_up){
+                attachmentActions.elbowLevel2();
+            }
+            if (gamepad1.dpad_up){
+                driveActions.setSpeed(1.0);
+            } else{
+                driveActions.setSpeed(0.75);
+            }
+            if (gamepad2.x){
+                driveActions.setSpeed(1.0);
+            } else if (gamepad2.a){
+                driveActions.setSpeed(0.75);
+            }
+            attachmentActions.adjustElbow(gamepad2.left_stick_y);
+            attachmentActions.adjustSlide(gamepad2.left_stick_y);
             driveActions.weirdWheelDrive(gamepad2.right_trigger, gamepad2.left_trigger);
             driveActions.weirdWheelDrive(gamepad1.right_trigger, gamepad1.left_trigger);
             telemetry.addData("position: ", attachmentActions.elbowServo.getPosition());
-
-            //todo - This method simple prints true/false.
-            //sensorControlActions.isLimitSwitchPressed();
-
-            //todo - This method moves the linear slide up a little bit
-//            armActions                                                                                                                                                                                                                                                                                                                                                                                                                .isLimitSwitchPressed();
+            attachmentActions.slideMotor.setPower(gamepad2.right_stick_y * 0.2);
 
             telemetry.update();
         }

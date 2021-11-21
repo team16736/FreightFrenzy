@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.actions.HelperActions;
 
 //moves forward to the carousel, spins it, then turns and parks in the storage unit
 
-@Autonomous(name = "Autonomous Blue Side Left")
-public class AutonomousLeftBlue extends HelperActions{
+@Autonomous(name = "Autonomous Red Side Right")
+public class AutonomousRightRed extends HelperActions{
     private DriveActions driveActions = null;
     private AttachmentActions attachmentActions = null;
     public void runOpMode() {
@@ -24,10 +24,10 @@ public class AutonomousLeftBlue extends HelperActions{
             drive_ForwardAndStop(driveActions, 0.5, 0.7);
             sleep(100);
 
-            spin_RightAndStop(driveActions, 0.4, 0.7);
+            spin_LeftAndStop(driveActions, 0.4, 0.7);
             sleep(100);
 
-            drive_ForwardAndStop(driveActions, 0.5, 0.4);
+            drive_ForwardAndStop(driveActions, 0.5, 0.35);
             sleep(100);
 
             attachmentActions.elbowLevel2();
@@ -42,18 +42,17 @@ public class AutonomousLeftBlue extends HelperActions{
             drive_ReverseAndStop(driveActions, 0.5, 0.4);
             sleep(100);
 
-            spin_LeftAndStop(driveActions, 0.4, 2.1);
+            spin_RightAndStop(driveActions, 0.4, 2.1);
             sleep(100);
 
             weirdWheelsSpeed(driveActions, 1.0);
 
-            drive_ForwardAndStop(driveActions, 1.0, 2.0);
+            drive_ForwardAndStop(driveActions, 1.0, 2.3);
 
             weirdWheelsSpeed(driveActions, 0.0);
             sleep(100);
 
             drive_ReverseAndStop(driveActions, 0.5, 0.2);
-            sleep(100);
         }
     }
 }

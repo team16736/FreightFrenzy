@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -27,11 +28,11 @@ import java.util.List;
  */
 public class DriveActions {
 
-    public DcMotor leftFront;
-    public DcMotor leftRear;
+    public DcMotorEx leftFront;
+    public DcMotorEx leftRear;
 
-    public DcMotor rightFront;
-    public DcMotor rightRear;
+    public DcMotorEx rightFront;
+    public DcMotorEx rightRear;
 
     public DcMotor weirdWheels;
 
@@ -56,11 +57,11 @@ public class DriveActions {
         this.hardwareMap = opModeHardware;
 
         // 1. Hardware config
-        leftFront = hardwareMap.get(DcMotor.class, ConfigConstants.FRONT_LEFT);
-        leftRear = hardwareMap.get(DcMotor.class, ConfigConstants.BACK_LEFT);
+        leftFront = hardwareMap.get(DcMotorEx.class, ConfigConstants.FRONT_LEFT);
+        leftRear = hardwareMap.get(DcMotorEx.class, ConfigConstants.BACK_LEFT);
 
-        rightFront = hardwareMap.get(DcMotor.class, ConfigConstants.FRONT_RIGHT);
-        rightRear = hardwareMap.get(DcMotor.class, ConfigConstants.BACK_RIGHT);
+        rightFront = hardwareMap.get(DcMotorEx.class, ConfigConstants.FRONT_RIGHT);
+        rightRear = hardwareMap.get(DcMotorEx.class, ConfigConstants.BACK_RIGHT);
 
         weirdWheels = hardwareMap.get(DcMotor.class, ConfigConstants.WEIRD_WHEELS);
         weirdWheels.setDirection(DcMotorSimple.Direction.FORWARD);
