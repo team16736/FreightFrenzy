@@ -6,6 +6,14 @@ This module, TeamCode, is the place where you will write/paste the code for your
 robot controller App. This module is currently empty (a clean slate) but the
 process for adding OpModes is straightforward.
 
+## Commiting to Github
+
+- open the project in android studio
+- click terminal icon on the bottom of the screen
+- git add .
+- git commit -m "description of commit"
+- git push
+
 ## Creating your own OpModes
 
 The easiest way to create your own OpMode is to copy a Sample OpMode and make it your own.
