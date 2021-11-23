@@ -37,9 +37,6 @@ public class MainTeleOp extends LinearOpMode {
                     gamepad1.left_stick_x,      //joystick controlling strafe
                     -gamepad1.left_stick_y,     //joystick controlling forward/backward
                     gamepad1.right_stick_x);    //joystick controlling rotation
-            if (gamepad2.a){
-                attachmentActions.contractElbow();
-            }
             if (gamepad2.x){
                 attachmentActions.closeGripper();
             }
@@ -52,29 +49,16 @@ public class MainTeleOp extends LinearOpMode {
                 attachmentActions.spinCarousel(0.4);
             } else{
                 attachmentActions.spinCarousel(0.0);
-                if (gamepad2.b){
-                    attachmentActions.expandElbow();
-                }
             }
-            if (gamepad2.dpad_up){
-                attachmentActions.elbowLevel2();
-            }
-            if (gamepad1.dpad_up){
+            if (gamepad1.x){
                 driveActions.setSpeed(1.0);
-            } else{
+            } else if (gamepad1.a){
                 driveActions.setSpeed(0.75);
             }
-            if (gamepad2.x){
-                driveActions.setSpeed(1.0);
-            } else if (gamepad2.a){
-                driveActions.setSpeed(0.75);
-            }
-            attachmentActions.adjustElbow(gamepad2.left_stick_y);
             attachmentActions.adjustSlide(gamepad2.left_stick_y);
             driveActions.weirdWheelDrive(gamepad2.right_trigger, gamepad2.left_trigger);
             driveActions.weirdWheelDrive(gamepad1.right_trigger, gamepad1.left_trigger);
-            telemetry.addData("position: ", attachmentActions.elbowServo.getPosition());
-            attachmentActions.slideMotor.setPower(gamepad2.right_stick_y * 0.2);
+            attachmentActions.slideMotor.setPower(gamepad2.right_stick_y * 0.3);
 
             telemetry.update();
         }

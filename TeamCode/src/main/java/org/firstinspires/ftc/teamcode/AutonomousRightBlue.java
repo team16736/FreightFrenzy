@@ -73,7 +73,6 @@ public class AutonomousRightBlue extends HelperActions{
         encoderActions.encoderSpin(762.2, 180, true);
         encoderActions.encoderStrafe(762.2, 35, false);
         spin_CarouselAndStop(attachmentActions, 0.4, 4);
-        encoderActions.encoderStrafe(762.2,20,true);
-        //24 inches
+        encoderActions.encoderStrafe(762.2,20,true);        //24 inches
     }
 }

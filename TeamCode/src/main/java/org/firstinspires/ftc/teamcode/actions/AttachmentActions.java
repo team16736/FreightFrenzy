@@ -29,7 +29,7 @@ import java.util.List;
 public class AttachmentActions {
 
     public DcMotor carouselSpinner;
-    public Servo elbowServo;
+//    public Servo elbowServo;
     public Servo gripperServo;
     public DistanceSensor elementDetector;
     public DcMotorEx slideMotor;
@@ -39,8 +39,6 @@ public class AttachmentActions {
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
     private ElapsedTime runtime = new ElapsedTime();
-
-    public boolean applySensorSpeed = false;
 
     /**
      * Creates a mecanum motor using the 4 individual motors passed in as the arguments
@@ -55,12 +53,12 @@ public class AttachmentActions {
 
         // 1. Hardware config
         carouselSpinner = hardwareMap.get(DcMotor.class, ConfigConstants.CAROUSEL_SPINNER);
-        elbowServo = hardwareMap.get(Servo.class, ConfigConstants.ELBOW_SERVO);
+//        elbowServo = hardwareMap.get(Servo.class, ConfigConstants.ELBOW_SERVO);
         gripperServo = hardwareMap.get(Servo.class, ConfigConstants.GRIPPER_SERVO);
         elementDetector = hardwareMap.get(DistanceSensor.class, ConfigConstants.ELEMENT_DETECTOR);
         slideServo = hardwareMap.get(Servo.class, ConfigConstants.SLIDE_SERVO);
         slideMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.SLIDE_MOTOR);
-        elbowServo.setPosition(0.87);
+//        elbowServo.setPosition(0.87);
         gripperServo.setPosition(1.0);
         slideServo.setPosition(1.0);
     }
@@ -71,14 +69,9 @@ public class AttachmentActions {
     public void stopCarousel(){
         carouselSpinner.setPower(0.0);
     }
-    public void expandElbow(){
-        elbowServo.setPosition(0.05);
-    }
-    public void contractElbow(){
-        elbowServo.setPosition(0.87);
-    }
-    public void elbowLevel1(){ elbowServo.setPosition(0.18);}
-    public void elbowLevel2(){ elbowServo.setPosition(0.38); }
+    public void contractElbow(){ } //delete 72-74
+    public void elbowLevel1(){}
+    public void elbowLevel2(){}
     public void openGripper(){ gripperServo.setPosition(0.7); }
     public void closeGripper(){ gripperServo.setPosition(1.0); }
     public boolean detectElement(){
@@ -116,10 +109,7 @@ public class AttachmentActions {
         double distanceCorrectorM = (maximumPosition)-(minimumPosition)/(maximumDistance);
         slideServo.setPosition(distanceCorrectorM * distance);
     }
-    public void adjustElbow(double speed){
-        elbowServo.setPosition(elbowServo.getPosition()+speed*0.001);
-    }
     public void adjustSlide(double speed){
-        slideServo.setPosition(slideServo.getPosition()+speed*0.001);
+        slideServo.setPosition(slideServo.getPosition()+speed*0.0003);
     }
 }

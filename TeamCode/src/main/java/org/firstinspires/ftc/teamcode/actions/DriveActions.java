@@ -234,104 +234,10 @@ public class DriveActions {
      *                  - MecanumDrivetrain.DIRECTION_STRAFE_RIGHT
      * @param power - The desired motor power (most accurate at low powers < 0.25)
      */
-    public void driveByInches(LinearOpMode opMode, int inches, int direction, double power){
-
-
-        int ticksToReachTarget;
-
-        if (direction == MotorConstants.DIRECTION_FORWARD || direction == MotorConstants.DIRECTION_REVERSE){
-
-            ticksToReachTarget = (int) Math.round(inches * MotorConstants.TICKS_PER_INCH);
-        } else{
-
-            ticksToReachTarget = (int) Math.round(inches * MotorConstants.TICKS_PER_INCH);
-        }
-
-        telemetry.addData("ticksToReachTarget: ", "" + ticksToReachTarget);
-        telemetry.update();
-
-        telemetry.addData("leftFront current position: ", "" + leftFront.getCurrentPosition());
-        telemetry.addData("leftRear current position: ", "" + leftRear.getCurrentPosition());
-        telemetry.addData("rightFront current position: ", "" + rightFront.getCurrentPosition());
-        telemetry.addData("rightRear current position: ", ""+ rightRear.getCurrentPosition());
-        telemetry.update();
-
-
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        telemetry.addData("STOP_AND_RESET_ENCODER", "---------------------");
-        telemetry.addData("leftFront current position: ", "" + leftFront.getCurrentPosition());
-        telemetry.addData("leftRear current position: ", "" + leftRear.getCurrentPosition());
-        telemetry.addData("rightFront current position: ", "" + rightFront.getCurrentPosition());
-        telemetry.addData("rightRear current position: ", ""+ rightRear.getCurrentPosition());
-        telemetry.update();
-
-        // Determine new target position, and pass to motor controller
-
-        if (direction == MotorConstants.DIRECTION_FORWARD){
-
-            leftFront.setTargetPosition(leftFront.getCurrentPosition() + ticksToReachTarget);
-            leftRear.setTargetPosition(leftRear.getCurrentPosition() + ticksToReachTarget);
-            rightFront.setTargetPosition(rightFront.getCurrentPosition() + ticksToReachTarget);
-            rightRear.setTargetPosition(rightRear.getCurrentPosition() + ticksToReachTarget);
-
-        } else if (direction == MotorConstants.DIRECTION_REVERSE){
-
-            leftFront.setTargetPosition(leftFront.getCurrentPosition() + ticksToReachTarget);
-            leftRear.setTargetPosition(leftRear.getCurrentPosition() + ticksToReachTarget);
-            rightFront.setTargetPosition(rightFront.getCurrentPosition() - ticksToReachTarget);
-            rightRear.setTargetPosition(rightRear.getCurrentPosition() - ticksToReachTarget);
-        }
-
-        // Turn On RUN_TO_POSITION
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-        telemetry.addData("STOP_AND_RESET_ENCODER", "===============================");
-        telemetry.addData("leftFront current position: ", "" + leftFront.getCurrentPosition());
-        telemetry.addData("leftRear current position: ", "" + leftRear.getCurrentPosition());
-        telemetry.addData("rightFront current position: ", "" + rightFront.getCurrentPosition());
-        telemetry.addData("rightRear current position: ", ""+ rightRear.getCurrentPosition());
-        telemetry.update();
-        opMode.sleep((long)(1000 * 3));
-
-
-        // reset the timeout time and start motion.
-        runtime.reset();
-        leftFront.setPower(Math.abs(power));
-        leftRear.setPower(Math.abs(power));
-        rightFront.setPower(Math.abs(power));
-        rightRear.setPower(Math.abs(power));
-
-
-        while (opMode.opModeIsActive() && (leftFront.isBusy() || leftRear.isBusy() || rightFront.isBusy() || rightRear.isBusy())) {
-
-            telemetry.addData("leftFront current position: ", "" + leftFront.getCurrentPosition());
-            telemetry.addData("leftRear current position: ", "" + leftRear.getCurrentPosition());
-            telemetry.addData("rightFront current position: ", "" + rightFront.getCurrentPosition());
-            telemetry.addData("rightRear current position: ", ""+ rightRear.getCurrentPosition());
-            telemetry.update();
-        }
-
-        stop();
-
-    }
-
 
     /**
      * Returns true if the robot is moving
      */
-    public boolean isMoving() {
-
-        return leftFront.isBusy() || leftRear.isBusy() || rightFront.isBusy() || rightRear.isBusy();
-    }
-
     //NOT TESTED
     private void setMotorDirection(int direction){
 
@@ -355,17 +261,10 @@ public class DriveActions {
     public void weirdWheelDrive(double forward, double reverse){
         if (forward > 0.1) {
             weirdWheels.setPower(forward);
-//            telemetry.addData("power", forward);
-//            telemetry.update();
         } else if (reverse > 0.1) {
             weirdWheels.setPower(-reverse);
-//            telemetry.addData("power", -reverse);
-//            telemetry.update();
         } else {
             weirdWheels.setPower(0.0);
-//            telemetry.addData("power", forward);
-//            telemetry.addData("power", -reverse);
-//            telemetry.update();
         }
     }
 
