@@ -27,9 +27,8 @@ public class BasicDrive extends HelperActions {
         if (opModeIsActive()) {
             Double speed = 762.2;
 
-            encoderActions.encoderDrive(speed, 38);
-            encoderActions.encoderSpin(speed, 90, true);
-            attachmentActions.elbowLevel2();
+            attachmentActions.extendSlide(24);
+            sleep(100000);
         }
     }
 }

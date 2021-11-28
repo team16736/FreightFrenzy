@@ -10,10 +10,11 @@ import org.firstinspires.ftc.teamcode.actions.HelperActions;
 //moves forward to the carousel, spins it, then turns and parks in the storage unit
 
 @Autonomous(name = "Autonomous Blue Side Right")
-public class AutonomousRightBlue extends HelperActions{
+public class AutonomousRightBlue extends HelperActions {
     private DriveActions driveActions = null;
     private AttachmentActions attachmentActions = null;
     private EncoderActions encoderActions = null;
+
     public void runOpMode() {
 
         driveActions = new DriveActions(telemetry, hardwareMap);
@@ -35,24 +36,29 @@ public class AutonomousRightBlue extends HelperActions{
     private void placeBlock(EncoderActions encoderActions, AttachmentActions attachmentActions, int blockPlace) {
         if (blockPlace == 1) {
             encoderActions.encoderStrafe(762.2, 11, false);
-            attachmentActions.elbowLevel1();
-            sleep(1000);
+            attachmentActions.spinSlide(762.2, 30);
+            attachmentActions.extendSlide(17);
             encoderActions.encoderDrive(762.2, 23);
             encoderActions.encoderSpin(762.2, 90, true);
-            encoderActions.encoderDrive(762.2, 4);
+            // encoderActions.encoderDrive(762.2, 4);
+            sleep(2000);
             attachmentActions.openGripper();
             sleep(500);
-            encoderActions.encoderDrive(762.2, -4);
+            attachmentActions.extendSlide(0.0);
+            // encoderActions.encoderDrive(762.2, -4);
         } else if (blockPlace == 2) {
             encoderActions.encoderStrafe(762.2, 11, false);
-            attachmentActions.elbowLevel2();
+            attachmentActions.spinSlide(762.2, 48);
+            attachmentActions.extendSlide(8);
             sleep(1000);
             encoderActions.encoderDrive(762.2, 23);
             encoderActions.encoderSpin(762.2, 90, true);
-            encoderActions.encoderDrive(762.2, 15);
+            encoderActions.encoderDrive(762.2, 18);
+            sleep(1000000);
             attachmentActions.openGripper();
             sleep(500);
-            encoderActions.encoderDrive(762.2, -6);
+            attachmentActions.extendSlide(0.0);
+            encoderActions.encoderDrive(762.2, -1);
         } else {
             encoderActions.encoderStrafe(762.2, 7, true);
             encoderActions.encoderDrive(762.2, 24);
@@ -70,9 +76,10 @@ public class AutonomousRightBlue extends HelperActions{
 //        encoderActions.encoderDrive(762.2, -6);
         attachmentActions.contractElbow();
         encoderActions.encoderDrive(762.2, -20);
+
         encoderActions.encoderSpin(762.2, 180, true);
         encoderActions.encoderStrafe(762.2, 35, false);
         spin_CarouselAndStop(attachmentActions, 0.4, 4);
-        encoderActions.encoderStrafe(762.2,20,true);        //24 inches
+        encoderActions.encoderStrafe(762.2, 20, true);        //24 inches
     }
 }

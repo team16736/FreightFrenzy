@@ -60,7 +60,7 @@ public class AttachmentActions {
         slideMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.SLIDE_MOTOR);
 //        elbowServo.setPosition(0.87);
         gripperServo.setPosition(1.0);
-        slideServo.setPosition(1.0);
+        //slideServo.setPosition(1.0);
     }
 
     public void spinCarousel(double speed){
@@ -81,7 +81,7 @@ public class AttachmentActions {
             return false;
         }
     }
-    private void spinSlide(double speed, double degrees){
+    public void spinSlide(double speed, double degrees){
         slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         double ticksPerRevolution = 5281.1;
         double ticksPerDegree = (ticksPerRevolution)/360;
@@ -106,8 +106,9 @@ public class AttachmentActions {
         double maximumDistance = 24; //the distance from the front of the slide fully contracted to the front of the slide fully extended
         double maximumPosition = 0.46; //the servo position when the slide is at maximum
         double minimumPosition = 1.0; //the servo position when the slide is at minimum
-        double distanceCorrectorM = (maximumPosition)-(minimumPosition)/(maximumDistance);
-        slideServo.setPosition(distanceCorrectorM * distance);
+        double distanceCorrectorM = Math.abs((maximumPosition)-(minimumPosition))/(maximumDistance);
+        double distanceCorrectorB = minimumPosition;
+        slideServo.setPosition(distanceCorrectorB - (distanceCorrectorM * distance));
     }
     public void adjustSlide(double speed){
         slideServo.setPosition(slideServo.getPosition()+speed*0.0003);

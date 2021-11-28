@@ -58,12 +58,15 @@ public class MainTeleOp extends LinearOpMode {
             attachmentActions.adjustSlide(gamepad2.left_stick_y);
             driveActions.weirdWheelDrive(gamepad2.right_trigger, gamepad2.left_trigger);
             driveActions.weirdWheelDrive(gamepad1.right_trigger, gamepad1.left_trigger);
-            attachmentActions.slideMotor.setPower(gamepad2.right_stick_y * 0.3);
+            if (gamepad2.right_stick_y != 0){
+                attachmentActions.slideMotor.setPower(gamepad2.left_stick_y*0.3);
+                attachmentActions.spinSlide(762.2, 0);
+            }
 
             telemetry.update();
         }
 
-        telemetry.addData("STEPHON ", "Stopping");
+        telemetry.addData("[ROBOTNAME] ", "Going");
         telemetry.update();
 
         idle();
