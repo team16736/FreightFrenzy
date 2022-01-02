@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.actions;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -11,11 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.actions.constants.ConfigConstants;
-import org.firstinspires.ftc.teamcode.actions.constants.MotorConstants;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 /**
  * Make sure to have the following:
  *
@@ -32,8 +27,8 @@ public class AttachmentActions {
 //    public Servo elbowServo;
     public Servo gripperServo;
     public DistanceSensor elementDetector;
-    public DcMotorEx slideMotor;
-    public Servo slideServo;
+    public DcMotorEx slideTurnMotor;
+    public DcMotorEx slideExtendMotor;
 
 
     private Telemetry telemetry;
@@ -56,11 +51,10 @@ public class AttachmentActions {
 //        elbowServo = hardwareMap.get(Servo.class, ConfigConstants.ELBOW_SERVO);
         gripperServo = hardwareMap.get(Servo.class, ConfigConstants.GRIPPER_SERVO);
         elementDetector = hardwareMap.get(DistanceSensor.class, ConfigConstants.ELEMENT_DETECTOR);
-        slideServo = hardwareMap.get(Servo.class, ConfigConstants.SLIDE_SERVO);
-        slideMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.SLIDE_MOTOR);
+        slideTurnMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.SLIDE_TURN_MOTOR);
+        slideExtendMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.SLIDE_EXTEND_MOTOR);
 //        elbowServo.setPosition(0.87);
-        gripperServo.setPosition(1.0);
-        //slideServo.setPosition(1.0);
+        gripperServo.setPosition(0.45);
     }
 
     public void spinCarousel(double speed){
@@ -72,8 +66,8 @@ public class AttachmentActions {
     public void contractElbow(){ } //delete 72-74
     public void elbowLevel1(){}
     public void elbowLevel2(){}
-    public void openGripper(){ gripperServo.setPosition(0.7); }
-    public void closeGripper(){ gripperServo.setPosition(1.0); }
+    public void openGripper(){ gripperServo.setPosition(0.6); }
+    public void closeGripper(){ gripperServo.setPosition(0.45); }
     public boolean detectElement(){
         if (elementDetector.getDistance(DistanceUnit.CM)<10){
             return true;
@@ -82,35 +76,42 @@ public class AttachmentActions {
         }
     }
     public void spinSlide(double speed, double degrees){
-        slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        slideTurnMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
         double ticksPerRevolution = 5281.1;
         double ticksPerDegree = (ticksPerRevolution)/360;
         int totalTicks = (int) (ticksPerDegree * degrees);
-        slideMotor.setTargetPosition(totalTicks);
 
+        slideTurnMotor.setTargetPosition(totalTicks);
+
+        slideTurnMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+        slideTurnMotor.setVelocity(speed);
+    }
+
+    public void extendSlide(double distance){
+        double maxPosition = -3610;
+        double minPosition = 0;
+        double maxLength = 24;
+        double ticksPerInch = (maxPosition-minPosition)/maxLength;
+        int totalTicks = (int) (ticksPerInch * distance);
+
+        slideExtendMotor.setTargetPosition(totalTicks);
+
+        slideExtendMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+        slideExtendMotor.setPower(0.5);
+    }
+    public void adjustSlide(double speed){}
+    public void teleOpSlideRotate(double speed, int distance){
+        int currentTicks = slideTurnMotor.getCurrentPosition();
+        int totalTicks = (int) currentTicks + distance;
+        slideTurnMotor.setTargetPosition(totalTicks);
 
         //Switch to RUN_TO_POSITION mode
-        slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        slideTurnMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         //Start the motor moving by setting the max velocity to 1 revolution per second
-        slideMotor.setVelocity(speed);
-
-        //While the Op Mode is running, show the motor's status via telemetry
-        while (slideMotor.isBusy()) {
-            telemetry.addData("FL is at target", !slideMotor.isBusy());
-            telemetry.addData("encoder count", slideMotor.getCurrentPosition());
-            telemetry.update();
-        }
-    }
-    public void extendSlide(double distance){
-        double maximumDistance = 24; //the distance from the front of the slide fully contracted to the front of the slide fully extended
-        double maximumPosition = 0.46; //the servo position when the slide is at maximum
-        double minimumPosition = 1.0; //the servo position when the slide is at minimum
-        double distanceCorrectorM = Math.abs((maximumPosition)-(minimumPosition))/(maximumDistance);
-        double distanceCorrectorB = minimumPosition;
-        slideServo.setPosition(distanceCorrectorB - (distanceCorrectorM * distance));
-    }
-    public void adjustSlide(double speed){
-        slideServo.setPosition(slideServo.getPosition()+speed*0.0003);
+        slideTurnMotor.setVelocity(speed);
     }
 }

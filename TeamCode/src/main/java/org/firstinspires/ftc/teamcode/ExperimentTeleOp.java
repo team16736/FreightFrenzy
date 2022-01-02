@@ -3,78 +3,66 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.actions.AttachmentActions;
 import org.firstinspires.ftc.teamcode.actions.DriveActions;
+import org.firstinspires.ftc.teamcode.actions.HelperActions;
 
 @TeleOp(name = "Experiment Tele Op", group = "Linear Opmode")
-public class ExperimentTeleOp extends LinearOpMode {
-    private DcMotorEx slideMotor;
-    private Servo slideServo;
+
+public class ExperimentTeleOp extends HelperActions {
+
+    private DriveActions driveActions = null;
+    private AttachmentActions attachmentActions = null;
 
     @Override
     public void runOpMode() {
-        slideMotor = hardwareMap.get(DcMotorEx.class, "slideMotor");
-        slideServo = hardwareMap.get(Servo.class, "slideServo");
-        slideServo.setPosition(1.0);
+
+        driveActions = new DriveActions(telemetry, hardwareMap);
+        attachmentActions = new AttachmentActions(telemetry, hardwareMap);
+
+        //Set Speed for teleOp. Mecannum wheel speed.
+        //driveActions.setSpeed(1.0);
+
+        double carouselPower = 0.4;
+        int currentTicks = 0;
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        slideMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        attachmentActions.slideTurnMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        double proportionalControl = 0.003;
+        double integral = 0;
+
+        driveActions.setSpeed(0.75);
 
         while (opModeIsActive()) {
-            if (gamepad1.a){
-            slideServo.setPosition(.60);
-            } else if (gamepad1.b){
-                slideServo.setPosition(1.0);
-            }
-            if(gamepad1.right_bumper) {
-                spinSlide(100, -15);
-            } else if(gamepad1.left_bumper){
-                spinSlide(100, 15);
-            } else{
-                slideMotor.setPower(gamepad1.left_stick_y/5);
-            }
+            if(gamepad1.a){integral = 0.002;}
+            if (gamepad1.b){integral=0.003;}
+            if (gamepad1.x){integral=0.0005;}
+            if (gamepad1.y){integral=0.001;}
+            double armSpeed = changeSpeedArm(gamepad1.dpad_up, gamepad2.dpad_down);
+            if(Math.abs(gamepad1.right_stick_y)>0.1){
+                attachmentActions.slideTurnMotor.setPower(gamepad1.right_stick_y * -armSpeed);
+                currentTicks = attachmentActions.slideTurnMotor.getCurrentPosition();
+            }else if(attachmentActions.slideTurnMotor.getCurrentPosition() < currentTicks){
+                attachmentActions.slideTurnMotor.setPower((attachmentActions.slideTurnMotor.getCurrentPosition()-currentTicks)*-0.003);
+            }else if(attachmentActions.slideTurnMotor.getCurrentPosition() > currentTicks){
+                attachmentActions.slideTurnMotor.setPower((attachmentActions.slideTurnMotor.getCurrentPosition()-currentTicks)*-integral);
+            }// change to proportional control as well may make fewer oscillations
 
+            telemetry.addData("Current Position ", (attachmentActions.slideTurnMotor.getCurrentPosition()/(5281.1/360)));
+            telemetry.addData("Target Position", currentTicks);
+            telemetry.addData("Current Power", attachmentActions.slideTurnMotor.getPower());
+            telemetry.addData("Slide Length", attachmentActions.slideExtendMotor.getCurrentPosition());
+            telemetry.update();
         }
-        telemetry.addData("STEPHON ", "Stopping");
+
+        telemetry.addData("[ROBOTNAME] ", "Going");
         telemetry.update();
 
         idle();
-    }
-    private void spinSlide(double speed, double degrees){
-        slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        double ticksPerRevolution = 5281.1;
-        double ticksPerDegree = (ticksPerRevolution)/360;
-        int totalTicks = (int) (ticksPerDegree * degrees);
-        slideMotor.setTargetPosition(totalTicks);
-
-
-        //Switch to RUN_TO_POSITION mode
-        slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-        //Start the motor moving by setting the max velocity to 1 revolution per second
-        slideMotor.setVelocity(speed);
-
-        //While the Op Mode is running, show the motor's status via telemetry
-        while (slideMotor.isBusy()) {
-            telemetry.addData("FL is at target", !slideMotor.isBusy());
-            telemetry.addData("encoder count", slideMotor.getCurrentPosition());
-            telemetry.update();
-        }
-    }
-    public void extendSlide(double distance){
-        double maximumDistance = 24; //the distance from the front of the slide fully contracted to the front of the slide fully extended
-        double maximumPosition = 0.46; //the servo position when the slide is at maximum
-        double minimumPosition = 1.0; //the servo position when the slide is at minimum
-        double distanceCorrectorM = (maximumPosition)-(minimumPosition)/(maximumDistance);
-        slideServo.setPosition(distanceCorrectorM * distance);
     }
 }

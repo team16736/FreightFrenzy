@@ -16,8 +16,8 @@ public class ConfigConstants {
     public static final String SERVO_RIGHT = "right_hook";
 
     //slide
-    public static final String SLIDE_MOTOR = "slideMotor";
-    public static final String SLIDE_SERVO = "slideServo";
+    public static final String SLIDE_TURN_MOTOR = "slideMotor";
+    public static final String SLIDE_EXTEND_MOTOR = "slideExtender";
 
     //Elbow
     public static final String ELBOW_SERVO = "elbow_servo";

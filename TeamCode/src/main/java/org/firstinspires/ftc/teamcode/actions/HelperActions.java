@@ -18,6 +18,11 @@ public abstract class HelperActions extends LinearOpMode {
     public static int FORWARDS = 3;
     public static int BACKWARDS = 4;
 
+    private int speeding = 0;
+    private double speed = 0.8;
+    private int speedingArm = 0;
+    private double speedArm = 0.6;
+
     public void drive_ReverseAndStop(DriveActions driveActions, double speed, double drivingTime) {
 
         driveActions.setMotorDirection_Reverse();
@@ -156,5 +161,78 @@ public abstract class HelperActions extends LinearOpMode {
         } else {
             return 3;
         }
+    }
+    public void changeSpeed(DriveActions driveActions, boolean upOne1, boolean downOne1, boolean upTwo, boolean upOne2, boolean downTwo, boolean downOne2){
+        if(upOne1){
+            speeding++;
+            if(speeding == 1){
+                speed = speed + 0.1;
+            }
+        }
+        if(downOne1){
+            speeding++;
+            if(speeding == 1){
+                speed = speed - 0.1;
+            }
+        }
+        if(upTwo){
+            speeding++;
+            if(speeding == 1){
+                speed = speed + 0.2;
+            }
+        }
+        if(upOne2){
+            speeding++;
+            if(speeding == 1){
+                speed = speed + 0.1;
+            }
+        }
+        if(downTwo){
+            speeding++;
+            if(speeding == 1){
+                speed = speed - 0.2;
+            }
+        }
+        if(downOne2){
+            speeding++;
+            if(speeding == 1){
+                speed = speed - 0.1;
+            }
+        }
+        if(!upOne1 && !downOne1 && !upTwo && !upOne2 && !downTwo && !downOne2){
+            speeding = 0;
+        }
+        if (speed < 0){
+            speed = 0;
+        }
+        if (speed > 1.0){
+            speed = 1.0;
+        }
+        driveActions.setSpeed(speed);
+        telemetry.addData("speed: ", speed);
+    }
+    public double changeSpeedArm(boolean up, boolean down) {
+        if (up) {
+            speedingArm++;
+            if (speedingArm == 1) {
+                speedArm = speedArm + 0.1;
+            }
+        }
+        if (down) {
+            speedingArm++;
+            if (speedingArm == 1) {
+                speedArm = speedArm - 0.1;
+            }
+        }
+        if (!up && !down) {
+            speedingArm = 0;
+        }
+        if (speedArm < 0) {
+            speedArm = 0;
+        }
+        if (speedArm > 1.0) {
+            speedArm = 1.0;
+        }
+        return speedArm;
     }
 }

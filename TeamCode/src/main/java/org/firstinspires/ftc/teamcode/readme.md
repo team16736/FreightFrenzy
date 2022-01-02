@@ -8,6 +8,7 @@ process for adding OpModes is straightforward.
 
 ## Commiting to Github
 
+- connect to wifi
 - open the project in android studio
 - click terminal icon on the bottom of the screen
 - git add .

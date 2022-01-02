@@ -1,17 +1,22 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.actions.AttachmentActions;
 import org.firstinspires.ftc.teamcode.actions.DriveActions;
+import org.firstinspires.ftc.teamcode.actions.HelperActions;
+import org.firstinspires.ftc.teamcode.actions.constants.ConfigConstants;
 
 @TeleOp(name = "Main Tele Op", group = "Linear Opmode")
-public class MainTeleOp extends LinearOpMode {
+public class MainTeleOp extends HelperActions {
 
     private DriveActions driveActions = null;
     private AttachmentActions attachmentActions = null;
+    DcMotorEx slideExtendMotor;
+    boolean memoryBit;
 
     @Override
     public void runOpMode() {
@@ -23,11 +28,23 @@ public class MainTeleOp extends LinearOpMode {
         //driveActions.setSpeed(1.0);
 
         double carouselPower = 0.4;
+        int currentTicks = 0;
+        int speeding = 0;
+        double speed = 0.8;
+        double speedY; //Create new double for the speed.
+        int currentPos; //Create an integer for the current position (IMPORTANT THAT ITS AN INTEGER, WILL NOT WORK OTHERWISE)
+
+        slideExtendMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.SLIDE_EXTEND_MOTOR);
+        slideExtendMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        driveActions.setSpeed(0.75);
+        driveActions.setSpeed(0.8);
+
+        slideExtendMotor.setTargetPosition(-3000);
+        slideExtendMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideExtendMotor.setPower(0.5);
 
         while (opModeIsActive()) {
             //TODO: add functionality for red side carousel
@@ -44,25 +61,55 @@ public class MainTeleOp extends LinearOpMode {
                 attachmentActions.openGripper();
             }
             if (gamepad2.dpad_right){
-                attachmentActions.spinCarousel(-0.4);
+                attachmentActions.spinCarousel(-carouselPower);
             } else if (gamepad2.dpad_left){
-                attachmentActions.spinCarousel(0.4);
+                attachmentActions.spinCarousel(carouselPower);
             } else{
                 attachmentActions.spinCarousel(0.0);
             }
-            if (gamepad1.x){
-                driveActions.setSpeed(1.0);
-            } else if (gamepad1.a){
-                driveActions.setSpeed(0.75);
-            }
-            attachmentActions.adjustSlide(gamepad2.left_stick_y);
-            driveActions.weirdWheelDrive(gamepad2.right_trigger, gamepad2.left_trigger);
+
+            if(gamepad2.b){attachmentActions.extendSlide(14);}
             driveActions.weirdWheelDrive(gamepad1.right_trigger, gamepad1.left_trigger);
-            if (gamepad2.right_stick_y != 0){
-                attachmentActions.slideMotor.setPower(gamepad2.left_stick_y*0.3);
-                attachmentActions.spinSlide(762.2, 0);
+
+            double armSpeed = changeSpeedArm(gamepad2.dpad_up, gamepad2.dpad_down);
+
+            speedY = gamepad2.left_stick_y; //map double speedY to the Y axis of player 1's left joystick.
+            currentPos = slideExtendMotor.getCurrentPosition(); //map integer currentPos to the arm's current extended position.
+            if(currentPos <= -3450 && speedY < 0) {//limit extending to -3450 encoder ticks, about 1 inch from fully extended. check if you are pressing up to continue extending, if so then set speed to 0.
+                speedY = 0;
+            }
+            if(currentPos >= 0 && speedY > 0) {//limit retracting to 0 ticks, fully closed. check if pressing down on joystick, if so set speed to 0.
+                speedY = 0;
+                currentPos = 0; //Set the arm to go to the fully closed position. Not needed (dont quote me on this)
+            }
+            if((speedY == 0) && (!memoryBit)) { //Only runs if speedY is 0 (joystick idle) and the memory bit is false.
+                slideExtendMotor.setTargetPosition(currentPos); //Set the arm to hold its position.
+                slideExtendMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); //Set the arm's run mode so it actually does stuff
+                slideExtendMotor.setPower(0.5); //Set the motor to half power.
+                memoryBit = true; //Change the memory bit back to true so it only runs once.
+            }
+            if((speedY != 0)) { //If the joystick IS being pushed, run this code.
+                memoryBit = false; //Set memory bit to false so that the previous if statement works.
+                slideExtendMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS); //Change mode to run using encoders.
+                slideExtendMotor.setPower(speedY*(armSpeed/.6)); //Set the motor power to the current joystick position.
             }
 
+            telemetry.addData("Gamepad is at", speedY); //testing junk
+            telemetry.addData("Arm is extended to", slideExtendMotor.getCurrentPosition()); //testing junk
+            if(Math.abs(gamepad2.right_stick_y)>0.1){
+                attachmentActions.slideTurnMotor.setPower(gamepad2.right_stick_y * -armSpeed);
+                currentTicks = attachmentActions.slideTurnMotor.getCurrentPosition();
+            }else if(attachmentActions.slideTurnMotor.getCurrentPosition() < currentTicks){
+                attachmentActions.slideTurnMotor.setPower((attachmentActions.slideTurnMotor.getCurrentPosition()-currentTicks)*-0.003);
+            }else if(attachmentActions.slideTurnMotor.getCurrentPosition() > currentTicks){
+                attachmentActions.slideTurnMotor.setPower((attachmentActions.slideTurnMotor.getCurrentPosition()-currentTicks)*-.001);
+            }// change to proportional control as well may make fewer oscillations
+
+            changeSpeed(driveActions, gamepad1.dpad_up, gamepad1.dpad_down, gamepad1.a, gamepad1.x, gamepad1.y, gamepad1.b);
+
+            telemetry.addData("Current Position ", attachmentActions.slideTurnMotor.getCurrentPosition());
+            telemetry.addData("Target Position", currentTicks);
+            telemetry.addData("Current Power", attachmentActions.slideTurnMotor.getPower());
             telemetry.update();
         }
 

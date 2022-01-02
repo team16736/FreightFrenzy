@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.actions.AttachmentActions;
 import org.firstinspires.ftc.teamcode.actions.DriveActions;
@@ -25,7 +26,7 @@ public class AutonomousRightBlue extends HelperActions {
         waitForStart();
         if (opModeIsActive()) {
             Double speed = 762.2;
-
+            attachmentActions.slideTurnMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             encoderActions.encoderDrive(speed, 15);
             encoderActions.encoderStrafe(speed, 2, false);
             placeBlock(encoderActions, attachmentActions, elementDetection(encoderActions, attachmentActions, false));
@@ -34,52 +35,61 @@ public class AutonomousRightBlue extends HelperActions {
     }
 
     private void placeBlock(EncoderActions encoderActions, AttachmentActions attachmentActions, int blockPlace) {
+        Double speed = 762.2;
+        sleep(100);
         if (blockPlace == 1) {
-            encoderActions.encoderStrafe(762.2, 11, false);
-            attachmentActions.spinSlide(762.2, 30);
-            attachmentActions.extendSlide(17);
-            encoderActions.encoderDrive(762.2, 23);
-            encoderActions.encoderSpin(762.2, 90, true);
-            // encoderActions.encoderDrive(762.2, 4);
-            sleep(2000);
+            encoderActions.encoderStrafe(speed, 11, false);
+            attachmentActions.spinSlide(speed, -48);
+            attachmentActions.extendSlide(11);
+            encoderActions.encoderDrive(speed, 23);
+            encoderActions.encoderSpin(speed, 90, true);
+            sleep(200);
             attachmentActions.openGripper();
             sleep(500);
-            attachmentActions.extendSlide(0.0);
-            // encoderActions.encoderDrive(762.2, -4);
+            attachmentActions.extendSlide(0);
+            sleep(200);
+            attachmentActions.spinSlide(speed, 48);
         } else if (blockPlace == 2) {
-            encoderActions.encoderStrafe(762.2, 11, false);
-            attachmentActions.spinSlide(762.2, 48);
-            attachmentActions.extendSlide(8);
+            encoderActions.encoderStrafe(speed, 11, false);
+            sleep(100);
+            attachmentActions.spinSlide(speed, -33);
+            attachmentActions.extendSlide(10);
             sleep(1000);
-            encoderActions.encoderDrive(762.2, 23);
-            encoderActions.encoderSpin(762.2, 90, true);
-            encoderActions.encoderDrive(762.2, 18);
-            sleep(1000000);
+            encoderActions.encoderDrive(speed, 23);
+            encoderActions.encoderSpin(speed, 90, true);
+            encoderActions.encoderDrive(speed, 12);
             attachmentActions.openGripper();
             sleep(500);
-            attachmentActions.extendSlide(0.0);
-            encoderActions.encoderDrive(762.2, -1);
+            attachmentActions.extendSlide(0);
+            sleep(200);
+            attachmentActions.spinSlide(speed, 33);
+            encoderActions.encoderDrive(speed, -5);
+            encoderActions.encoderSpin(762.2,5,false);
         } else {
-            encoderActions.encoderStrafe(762.2, 7, true);
-            encoderActions.encoderDrive(762.2, 24);
-            encoderActions.encoderStrafe(762.2, 3, false);
-            encoderActions.encoderSpin(762.2, 90, true);
-            attachmentActions.elbowLevel2();
-            sleep(1000);
-            encoderActions.encoderDrive(762.2, 2);
+            encoderActions.encoderStrafe(speed, 7, true);
+            attachmentActions.spinSlide(speed, -13);
+            attachmentActions.extendSlide(12);
+            sleep(200);
+            encoderActions.encoderDrive(speed, 24);
+            sleep(200);
+            encoderActions.encoderStrafe(speed, 3, false);
+            sleep(200);
+            encoderActions.encoderSpin(speed, 90, true);
+            sleep(200);
             attachmentActions.openGripper();
             sleep(500);
-            encoderActions.encoderDrive(762.2, -6);
+            attachmentActions.extendSlide(0);
+            attachmentActions.spinSlide(speed, 13);
+            encoderActions.encoderDrive(speed, -6);
         }
 //        attachmentActions.openGripper();
 //        sleep(500);
-//        encoderActions.encoderDrive(762.2, -6);
-        attachmentActions.contractElbow();
-        encoderActions.encoderDrive(762.2, -20);
+//        encoderActions.encoderDrive(speed, -6);
+        encoderActions.encoderDrive(speed, -17.5);
 
-        encoderActions.encoderSpin(762.2, 180, true);
-        encoderActions.encoderStrafe(762.2, 35, false);
+        encoderActions.encoderSpin(speed, 180, true);
+        encoderActions.encoderStrafe(speed, 35, false);
         spin_CarouselAndStop(attachmentActions, 0.4, 4);
-        encoderActions.encoderStrafe(762.2, 20, true);        //24 inches
+        encoderActions.encoderStrafe(speed, 20, true);
     }
 }
