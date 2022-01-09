@@ -39,7 +39,7 @@ public class AutonomousRightBlue extends HelperActions {
         sleep(100);
         if (blockPlace == 1) {
             encoderActions.encoderStrafe(speed, 11, false);
-            attachmentActions.spinSlide(speed, -48);
+            attachmentActions.spinSlide(speed, -46);
             attachmentActions.extendSlide(11);
             encoderActions.encoderDrive(speed, 23);
             encoderActions.encoderSpin(speed, 90, true);
@@ -48,7 +48,7 @@ public class AutonomousRightBlue extends HelperActions {
             sleep(500);
             attachmentActions.extendSlide(0);
             sleep(200);
-            attachmentActions.spinSlide(speed, 48);
+            attachmentActions.spinSlide(speed, 46);
         } else if (blockPlace == 2) {
             encoderActions.encoderStrafe(speed, 11, false);
             sleep(100);

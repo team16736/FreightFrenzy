@@ -33,12 +33,12 @@ public class AutonomousLeftBlue extends HelperActions{
 
             weirdWheelsSpeed(driveActions, 1.0);
 
-            drive_ForwardAndStop(driveActions, 1.0, 6.5);
+            encoderActions.encoderDriveNoTimer(3000, 100000);
+            sleep(3000);
 
             weirdWheelsSpeed(driveActions, 0.0);
             sleep(100);
 
-            drive_ReverseAndStop(driveActions, 0.5, 0.2);
             sleep(100);
         }
     }
@@ -46,7 +46,7 @@ public class AutonomousLeftBlue extends HelperActions{
         double speed = 762.2;
         if(blockPlace == 1){
             attachmentActions.spinSlide(speed, -15);
-            attachmentActions.extendSlide(18);
+            attachmentActions.extendSlide(17);
             encoderActions.encoderSpin(speed, 32, false);
             sleep(1500);
             attachmentActions.openGripper();
@@ -58,7 +58,7 @@ public class AutonomousLeftBlue extends HelperActions{
             encoderActions.encoderStrafe(speed, 6, false);
         } else if(blockPlace == 2){
             attachmentActions.spinSlide(speed, -33);
-            attachmentActions.extendSlide(16);
+            attachmentActions.extendSlide(15);
             encoderActions.encoderStrafe(speed, 8, false);
             encoderActions.encoderSpin(speed, 33, false);
             sleep(2000);
@@ -68,10 +68,11 @@ public class AutonomousLeftBlue extends HelperActions{
             encoderActions.encoderSpin(speed, 128, true);
             attachmentActions.spinSlide(speed, 33);
             encoderActions.encoderDrive(speed, 8.5);
-            encoderActions.encoderStrafe(speed, 6, false);
+            encoderActions.encoderStrafe(speed/2, 9, false);
+            encoderActions.encoderStrafe(speed, 3, true);
         } else{
-            attachmentActions.spinSlide(speed, -48);
-            attachmentActions.extendSlide(13);
+            attachmentActions.spinSlide(speed, -46);
+            attachmentActions.extendSlide(12);
             encoderActions.encoderStrafe(speed, 8, false);
             encoderActions.encoderSpin(speed, 35, false);
             sleep(1000);

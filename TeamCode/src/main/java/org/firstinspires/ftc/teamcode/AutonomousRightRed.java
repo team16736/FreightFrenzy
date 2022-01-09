@@ -31,12 +31,18 @@ public class AutonomousRightRed extends HelperActions{
 
             weirdWheelsSpeed(driveActions, 1.0);
 
-            drive_ForwardAndStop(driveActions, 1.0, 9.5);
+            encoderActions.encoderDriveNoTimer(3000, 100000);
+            sleep(3000);
 
+            encoderActions.resetEncoder();
             weirdWheelsSpeed(driveActions, 0.0);
             sleep(100);
 
             drive_ReverseAndStop(driveActions, 0.5, 0.2);
+            attachmentActions.closeGripper();
+            sleep(200);
+            attachmentActions.openGripper();
+            sleep(200);
         }
     }
     private void placeBlock(EncoderActions encoderActions, AttachmentActions attachmentActions, int blockPlace){
@@ -65,7 +71,8 @@ public class AutonomousRightRed extends HelperActions{
             encoderActions.encoderSpin(speed, 128, false);
             attachmentActions.spinSlide(speed, 35);
             encoderActions.encoderDrive(speed, 8.5);
-            encoderActions.encoderStrafe(speed, 6, true);
+            encoderActions.encoderStrafe(speed/2, 9, true);
+            encoderActions.encoderStrafe(speed, 3, false);
         } else{
             attachmentActions.spinSlide(speed, -15);
             attachmentActions.extendSlide(18);

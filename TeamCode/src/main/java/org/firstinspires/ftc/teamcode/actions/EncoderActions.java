@@ -57,6 +57,26 @@ final public class EncoderActions{
         // While the Op Mode is running, show the motor's status via telemetry
         isMotorBusy();
     }
+    public void encoderDriveNoTimer(double encoderSpeed, double encoderDistance) {
+        resetEncoder();
+        // Set the motor's target position to 6.4 rotations
+        double ticksPerInch = 62;
+        int totalTicks = (int) (ticksPerInch * encoderDistance);
+        motorFrontL.setTargetPosition(totalTicks);
+        motorFrontR.setTargetPosition(totalTicks);
+        motorBackL.setTargetPosition(totalTicks);
+        motorBackR.setTargetPosition(totalTicks);
+
+
+        // Switch to RUN_TO_POSITION mode
+        motorFrontL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Start the motor moving by setting the max velocity to 1 revolution per second
+        velocity(encoderSpeed, encoderSpeed, encoderSpeed, encoderSpeed);
+    }
     public void encoderStrafe(double encoderSpeed,
                               double encoderDistance,
                               boolean encoderMoveLeft) {

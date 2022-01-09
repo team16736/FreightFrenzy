@@ -38,12 +38,12 @@ public class AutonomousLeftRed extends HelperActions{
         if (blockPlace == 1) {
             encoderActions.encoderStrafe(speed, 14, true);
             attachmentActions.spinSlide(speed, -16);
-            attachmentActions.extendSlide(20);
-            sleep(500);
+            attachmentActions.extendSlide(17);
+            sleep(100);
             encoderActions.encoderDrive(speed, 23);
             sleep(100);
             encoderActions.encoderSpin(speed, 90, false);
-            sleep(3000);
+            sleep(2000);
             attachmentActions.openGripper();
             sleep(500);
             attachmentActions.extendSlide(0);
@@ -64,7 +64,7 @@ public class AutonomousLeftRed extends HelperActions{
         } else {
             attachmentActions.extendSlide(6.5);
             encoderActions.encoderStrafe(speed, 4, false);
-            attachmentActions.spinSlide(speed,-52);
+            attachmentActions.spinSlide(speed,-51);
             encoderActions.encoderDrive(speed, 24);
             encoderActions.encoderStrafe(speed, -3, false);
             encoderActions.encoderSpin(speed, 90, false);
@@ -75,7 +75,7 @@ public class AutonomousLeftRed extends HelperActions{
             encoderActions.encoderSpin(speed, 5, true);
             attachmentActions.closeGripper();
             attachmentActions.extendSlide(0);
-            attachmentActions.spinSlide(speed, 50);
+            attachmentActions.spinSlide(speed, 51);
         }
         attachmentActions.extendSlide(0.0);
         encoderActions.encoderDrive(speed,-19);

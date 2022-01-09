@@ -17,6 +17,7 @@ public class MainTeleOp extends HelperActions {
     private AttachmentActions attachmentActions = null;
     DcMotorEx slideExtendMotor;
     boolean memoryBit;
+    boolean memBitArmSpin;
 
     @Override
     public void runOpMode() {
@@ -28,11 +29,13 @@ public class MainTeleOp extends HelperActions {
         //driveActions.setSpeed(1.0);
 
         double carouselPower = 0.4;
-        int currentTicks = 0;
+        int targetArmSpin = 0;
         int speeding = 0;
         double speed = 0.8;
         double speedY; //Create new double for the speed.
         int currentPos; //Create an integer for the current position (IMPORTANT THAT ITS AN INTEGER, WILL NOT WORK OTHERWISE)
+        int armUpPosition1 = 0;
+        int armUpPosition2 = 0;
 
         slideExtendMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.SLIDE_EXTEND_MOTOR);
         slideExtendMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -68,7 +71,6 @@ public class MainTeleOp extends HelperActions {
                 attachmentActions.spinCarousel(0.0);
             }
 
-            if(gamepad2.b){attachmentActions.extendSlide(14);}
             driveActions.weirdWheelDrive(gamepad1.right_trigger, gamepad1.left_trigger);
 
             double armSpeed = changeSpeedArm(gamepad2.dpad_up, gamepad2.dpad_down);
@@ -98,18 +100,37 @@ public class MainTeleOp extends HelperActions {
             telemetry.addData("Arm is extended to", slideExtendMotor.getCurrentPosition()); //testing junk
             if(Math.abs(gamepad2.right_stick_y)>0.1){
                 attachmentActions.slideTurnMotor.setPower(gamepad2.right_stick_y * -armSpeed);
-                currentTicks = attachmentActions.slideTurnMotor.getCurrentPosition();
-            }else if(attachmentActions.slideTurnMotor.getCurrentPosition() < currentTicks){
-                attachmentActions.slideTurnMotor.setPower((attachmentActions.slideTurnMotor.getCurrentPosition()-currentTicks)*-0.003);
-            }else if(attachmentActions.slideTurnMotor.getCurrentPosition() > currentTicks){
-                attachmentActions.slideTurnMotor.setPower((attachmentActions.slideTurnMotor.getCurrentPosition()-currentTicks)*-.001);
-            }// change to proportional control as well may make fewer oscillations
+                targetArmSpin = attachmentActions.slideTurnMotor.getCurrentPosition();
+                armUpPosition1 = targetArmSpin;
+                memBitArmSpin = true;
+            }else if(attachmentActions.slideTurnMotor.getCurrentPosition() < targetArmSpin){
+                attachmentActions.slideTurnMotor.setPower((attachmentActions.slideTurnMotor.getCurrentPosition()-targetArmSpin)*-0.01);
+                armUpPosition2 = attachmentActions.slideTurnMotor.getCurrentPosition();
+                if((armUpPosition2>(armUpPosition1-10)) && (memBitArmSpin == true)){
+                    targetArmSpin = armUpPosition2;
+                    memBitArmSpin = false;
+                }else{
+                    armUpPosition1 = armUpPosition2;
+                }
+            }else if(attachmentActions.slideTurnMotor.getCurrentPosition() > targetArmSpin){
+                attachmentActions.slideTurnMotor.setPower((attachmentActions.slideTurnMotor.getCurrentPosition()-targetArmSpin)*-.001);
+                armUpPosition2 = attachmentActions.slideTurnMotor.getCurrentPosition();
+                if((armUpPosition2<(armUpPosition1+10)) && (memBitArmSpin == true)){
+                    targetArmSpin = armUpPosition2;
+                    memBitArmSpin = false;
+                }else{
+                    armUpPosition1 = armUpPosition2;
+                }
+            }
 
             changeSpeed(driveActions, gamepad1.dpad_up, gamepad1.dpad_down, gamepad1.a, gamepad1.x, gamepad1.y, gamepad1.b);
 
             telemetry.addData("Current Position ", attachmentActions.slideTurnMotor.getCurrentPosition());
-            telemetry.addData("Target Position", currentTicks);
+            telemetry.addData("Target Position", targetArmSpin);
             telemetry.addData("Current Power", attachmentActions.slideTurnMotor.getPower());
+            telemetry.addData("Memory Bit", memBitArmSpin);
+            telemetry.addData("Position 1", armUpPosition1);
+            telemetry.addData("Position 2", armUpPosition2);
             telemetry.update();
         }
 
