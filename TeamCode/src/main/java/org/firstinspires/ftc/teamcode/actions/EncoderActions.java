@@ -77,6 +77,36 @@ final public class EncoderActions{
         // Start the motor moving by setting the max velocity to 1 revolution per second
         velocity(encoderSpeed, encoderSpeed, encoderSpeed, encoderSpeed);
     }
+    public void encoderDriveUntilTape(double encoderSpeed, AttachmentActions attachmentActions){
+        resetEncoder();
+        // Set the motor's target position to 6.4 rotations
+        double ticksPerInch = 62;
+        if(encoderSpeed<0){ticksPerInch = -62;}
+        int totalTicks = (int) (ticksPerInch * 5000);
+        motorFrontL.setTargetPosition(totalTicks);
+        motorFrontR.setTargetPosition(totalTicks);
+        motorBackL.setTargetPosition(totalTicks);
+        motorBackR.setTargetPosition(totalTicks);
+
+
+        // Switch to RUN_TO_POSITION mode
+        motorFrontL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Start the motor moving by setting the max velocity to 1 revolution per second
+        velocity(encoderSpeed, encoderSpeed, encoderSpeed, encoderSpeed);
+
+        // While the Op Mode is running, show the motor's status via telemetry
+        while (motorFrontL.isBusy() && motorFrontR.isBusy() && motorBackL.isBusy() && motorBackR.isBusy() && !attachmentActions.detectBarrier()) {
+            telemetry.addData("FL is at target", !motorFrontL.isBusy());
+            telemetry.addData("FR is at target", !motorFrontR.isBusy());
+            telemetry.addData("BL is at target", !motorBackL.isBusy());
+            telemetry.addData("BR is at target", !motorBackR.isBusy());
+            telemetry.update();
+        }
+    }
     public void encoderStrafe(double encoderSpeed,
                               double encoderDistance,
                               boolean encoderMoveLeft) {

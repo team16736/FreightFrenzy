@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.actions;
 
+import android.graphics.Color;
+
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -27,6 +31,7 @@ public class AttachmentActions {
 //    public Servo elbowServo;
     public Servo gripperServo;
     public DistanceSensor elementDetector;
+    public ColorSensor boundaryDetector;
     public DcMotorEx slideTurnMotor;
     public DcMotorEx slideExtendMotor;
 
@@ -34,6 +39,7 @@ public class AttachmentActions {
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
     private ElapsedTime runtime = new ElapsedTime();
+    final float[] hsvValues = new float[3];
 
     /**
      * Creates a mecanum motor using the 4 individual motors passed in as the arguments
@@ -51,8 +57,10 @@ public class AttachmentActions {
 //        elbowServo = hardwareMap.get(Servo.class, ConfigConstants.ELBOW_SERVO);
         gripperServo = hardwareMap.get(Servo.class, ConfigConstants.GRIPPER_SERVO);
         elementDetector = hardwareMap.get(DistanceSensor.class, ConfigConstants.ELEMENT_DETECTOR);
+        boundaryDetector = hardwareMap.get(ColorSensor.class, ConfigConstants.BOUNDARY_DETECTOR);
         slideTurnMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.SLIDE_TURN_MOTOR);
         slideExtendMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.SLIDE_EXTEND_MOTOR);
+        slideExtendMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 //        elbowServo.setPosition(0.87);
         gripperServo.setPosition(0.45);
     }
@@ -113,5 +121,31 @@ public class AttachmentActions {
 
         //Start the motor moving by setting the max velocity to 1 revolution per second
         slideTurnMotor.setVelocity(speed);
+    }
+    public boolean detectBarrier(){
+        /* Use telemetry to display feedback on the driver station. We show the red, green, and blue
+         * normalized values from the sensor (in the range of 0 to 1), as well as the equivalent
+         * HSV (hue, saturation and value) values. See http://web.archive.org/web/20190311170843/https://infohost.nmt.edu/tcc/help/pubs/colortheory/web/hsv.html
+         * for an explanation of HSV color. */
+
+        // Update the hsvValues array by passing it to Color.colorToHSV()
+        Color.RGBToHSV(boundaryDetector.red() * 8, boundaryDetector.green() * 8, boundaryDetector.blue() * 8, hsvValues);
+
+        telemetry.addLine()
+                .addData("Red", boundaryDetector.red())
+                .addData("Green", boundaryDetector.green())
+                .addData("Blue", boundaryDetector.blue());
+        telemetry.addLine()
+                .addData("Hue", hsvValues[0])
+                .addData("Saturation", hsvValues[1])
+                .addData("Value", hsvValues[2]);
+//        telemetry.addData("Alpha", "%.3f", colors.alpha);
+        if((boundaryDetector.red()>60) || (boundaryDetector.green()>60) || (boundaryDetector.blue()>60)){
+            telemetry.addData("Tape"," ");
+            return true;
+        }else {
+            telemetry.addData("No Tape", " ");
+            return false;
+        }
     }
 }

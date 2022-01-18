@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.actions.HelperActions;
 
 //moves forward to the carousel, spins it, then turns and parks in the storage unit
 
-@Autonomous(name = "Autonomous Blue Side Left")
-public class AutonomousLeftBlue extends HelperActions{
+@Autonomous(name = "Autonomous Test")
+public class AutonomousTest extends HelperActions{
     private DriveActions driveActions = null;
     private AttachmentActions attachmentActions = null;
     private EncoderActions encoderActions = null;
@@ -27,19 +27,8 @@ public class AutonomousLeftBlue extends HelperActions{
 
         if (opModeIsActive()) {
             double speed = 762.2;
-            encoderActions.encoderDrive(speed, 15);
-            encoderActions.encoderStrafe(speed, 2, false);
-            placeBlock(encoderActions, attachmentActions, elementDetection(encoderActions, attachmentActions, true));
-
-            weirdWheelsSpeed(driveActions, 1.0);
-
             encoderActions.encoderDriveUntilTape(3000, attachmentActions);
             encoderActions.encoderDriveUntilTape(-speed, attachmentActions);
-
-            weirdWheelsSpeed(driveActions, 0.0);
-            sleep(100);
-
-            sleep(100);
         }
     }
     private void placeBlock(EncoderActions encoderActions, AttachmentActions attachmentActions, int blockPlace){
