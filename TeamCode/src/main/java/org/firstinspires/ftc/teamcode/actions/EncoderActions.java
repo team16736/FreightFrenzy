@@ -82,7 +82,7 @@ final public class EncoderActions{
         // Set the motor's target position to 6.4 rotations
         double ticksPerInch = 62;
         if(encoderSpeed<0){ticksPerInch = -62;}
-        int totalTicks = (int) (ticksPerInch * 5000);
+        int totalTicks = (int) (ticksPerInch * 90);
         motorFrontL.setTargetPosition(totalTicks);
         motorFrontR.setTargetPosition(totalTicks);
         motorBackL.setTargetPosition(totalTicks);

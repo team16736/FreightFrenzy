@@ -34,9 +34,9 @@ public class AutonomousLeftBlue extends HelperActions{
             weirdWheelsSpeed(driveActions, 1.0);
 
             encoderActions.encoderDriveUntilTape(3000, attachmentActions);
-            encoderActions.encoderDriveUntilTape(-speed, attachmentActions);
 
             weirdWheelsSpeed(driveActions, 0.0);
+            encoderActions.encoderDriveUntilTape(-speed, attachmentActions);
             sleep(100);
 
             sleep(100);

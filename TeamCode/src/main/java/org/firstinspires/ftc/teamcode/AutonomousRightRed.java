@@ -32,10 +32,10 @@ public class AutonomousRightRed extends HelperActions{
             weirdWheelsSpeed(driveActions, 1.0);
 
             encoderActions.encoderDriveUntilTape(3000, attachmentActions);
-            encoderActions.encoderDriveUntilTape(-speed, attachmentActions);
 
             encoderActions.resetEncoder();
             weirdWheelsSpeed(driveActions, 0.0);
+//            encoderActions.encoderDriveUntilTape(-speed, attachmentActions);
             sleep(100);
 
             drive_ReverseAndStop(driveActions, 0.5, 0.2);

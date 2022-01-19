@@ -77,7 +77,7 @@ public class AttachmentActions {
     public void openGripper(){ gripperServo.setPosition(0.6); }
     public void closeGripper(){ gripperServo.setPosition(0.45); }
     public boolean detectElement(){
-        if (elementDetector.getDistance(DistanceUnit.CM)<10){
+        if (elementDetector.getDistance(DistanceUnit.CM)<8){
             return true;
         } else {
             return false;
