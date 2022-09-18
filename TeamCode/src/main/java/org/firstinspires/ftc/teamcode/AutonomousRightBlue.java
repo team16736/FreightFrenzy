@@ -64,7 +64,6 @@ public class AutonomousRightBlue extends HelperActions {
             sleep(200);
             attachmentActions.spinSlide(speed, 33);
             encoderActions.encoderDrive(speed, -5);
-            encoderActions.encoderSpin(762.2,5,false);
         } else {
             encoderActions.encoderStrafe(speed, 7, true);
             attachmentActions.spinSlide(speed, -13);

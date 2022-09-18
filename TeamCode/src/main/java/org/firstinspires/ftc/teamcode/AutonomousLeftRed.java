@@ -38,7 +38,7 @@ public class AutonomousLeftRed extends HelperActions{
         if (blockPlace == 1) {
             encoderActions.encoderStrafe(speed, 14, true);
             attachmentActions.spinSlide(speed, -16);
-            attachmentActions.extendSlide(17);
+            attachmentActions.extendSlide(16.5);
             sleep(100);
             encoderActions.encoderDrive(speed, 23);
             sleep(100);
@@ -50,7 +50,7 @@ public class AutonomousLeftRed extends HelperActions{
             attachmentActions.spinSlide(speed, 16);
         } else if (blockPlace == 2) {
             encoderActions.encoderStrafe(speed, 14, true);
-            attachmentActions.spinSlide(speed, -35);
+            attachmentActions.spinSlide(speed, -33);
             attachmentActions.extendSlide(10);
             encoderActions.encoderDrive(speed, 22);
             encoderActions.encoderSpin(speed, 90, false);
@@ -59,7 +59,7 @@ public class AutonomousLeftRed extends HelperActions{
             sleep(500);
             encoderActions.encoderDrive(speed, -4);
             attachmentActions.extendSlide(0);
-            attachmentActions.spinSlide(speed, 35);
+            attachmentActions.spinSlide(speed, 33);
             encoderActions.encoderSpin(speed, 2, false);
         } else {
             attachmentActions.extendSlide(6.5);

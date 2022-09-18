@@ -51,9 +51,9 @@ public class MainTeleOp extends HelperActions {
 
             /** Gamepad 1 **/
             driveActions.drive(
-                    gamepad1.left_stick_x,      //joystick controlling strafe
-                    -gamepad1.left_stick_y,     //joystick controlling forward/backward
-                    gamepad1.right_stick_x);    //joystick controlling rotation
+                    (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),      //joystick controlling strafe
+                    (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),     //joystick controlling forward/backward
+                    (gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x)));    //joystick controlling rotation
             if (gamepad2.x){
                 attachmentActions.closeGripper();
             }

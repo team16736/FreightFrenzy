@@ -110,6 +110,12 @@ public class AttachmentActions {
 
         slideExtendMotor.setPower(0.5);
     }
+    public boolean isSlideExtendMotorBusy(){
+        return slideExtendMotor.isBusy();
+    }
+    public boolean isSlideRotateMotorBusy(){
+        return  slideTurnMotor.isBusy();
+    }
     public void adjustSlide(double speed){}
     public void teleOpSlideRotate(double speed, int distance){
         int currentTicks = slideTurnMotor.getCurrentPosition();

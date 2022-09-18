@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.concurrent.TimeUnit;
+
 
 final public class EncoderActions{
     DcMotorEx motorFrontL;
@@ -56,6 +58,40 @@ final public class EncoderActions{
 
         // While the Op Mode is running, show the motor's status via telemetry
         isMotorBusy();
+    }
+    public void encoderDriveSpeedRamp(double encoderSpeed, double encoderDistance, double rampTime) {
+        resetEncoder();
+        // Set the motor's target position to 6.4 rotations
+        double ticksPerInch = 62;
+        int totalTicks = (int) (ticksPerInch * encoderDistance);
+        motorFrontL.setTargetPosition(totalTicks);
+        motorFrontR.setTargetPosition(totalTicks);
+        motorBackL.setTargetPosition(totalTicks);
+        motorBackR.setTargetPosition(totalTicks);
+
+
+        // Switch to RUN_TO_POSITION mode
+        motorFrontL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        double startTime = runtime.now(TimeUnit.SECONDS);
+        double currentTime = startTime;
+
+        // While the Op Mode is running, show the motor's status via telemetry
+        while (motorFrontL.isBusy()) {
+            if(!(runtime.now(TimeUnit.SECONDS)-startTime<rampTime)){
+                currentTime = runtime.now(TimeUnit.SECONDS)-startTime;
+            }
+            double ramp = (currentTime/rampTime)*encoderSpeed;
+            velocity(ramp, ramp, ramp, ramp);
+            telemetry.addData("FL is at target", !motorFrontL.isBusy());
+            telemetry.addData("FR is at target", !motorFrontR.isBusy());
+            telemetry.addData("BL is at target", !motorBackL.isBusy());
+            telemetry.addData("BR is at target", !motorBackR.isBusy());
+            telemetry.update();
+        }
     }
     public void encoderDriveNoTimer(double encoderSpeed, double encoderDistance) {
         resetEncoder();
